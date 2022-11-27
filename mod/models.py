@@ -7,7 +7,7 @@
 для модели Post обязательными являются user_id, title, body
 создайте связи relationship между моделями: User.posts и Post.user
 """
-import os
+#import os
 import config
 
 
@@ -24,7 +24,8 @@ from sqlalchemy.orm import (
 from user import User
 from post import Post
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+
+#PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
 
 async_engine: AsyncEngine = create_async_engine(
     url = config.DB_ASYNC_URL,

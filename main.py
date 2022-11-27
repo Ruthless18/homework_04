@@ -19,6 +19,7 @@ from mod.jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL, json
 from mod.models import create_tables, create_user, create_post
 
 
+
 async def async_main():
     await create_tables()
     user_data = await asyncio.gather(json(USERS_DATA_URL))
