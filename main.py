@@ -12,14 +12,22 @@
   (используйте полученные из запроса данные, передайте их в функцию для добавления в БД)
 - закрытие соединения с БД
 """
+import asyncio
+
+from mod.jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL, json
+
+from mod.models import create_tables, create_user, create_post
 
 
 async def async_main():
-    pass
-
+    await create_tables()
+    user_data = await asyncio.gather(json(USERS_DATA_URL))
+    post_data = await asyncio.gather(json(POSTS_DATA_URL))
+    await create_user(user_data)
+    await create_post(post_data)
 
 def main():
-    pass
+    asyncio.run(async_main())
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
-from . import models, jsonplaceholder_requests, main
+from . import models, jsonplaceholder_requests
+import main
 
 __all__ = [
     "models",
