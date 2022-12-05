@@ -14,18 +14,21 @@
 """
 import asyncio
 
-from mod.jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL, json
+from mod.jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL, get_json
 
-from mod.models import create_tables, create_user, create_post
+from mod.models import create_tables, create_users, create_posts
 
 
 
 async def async_main():
     await create_tables()
-    user_data = await asyncio.gather(json(USERS_DATA_URL))
-    post_data = await asyncio.gather(json(POSTS_DATA_URL))
-    await create_user(user_data)
-    await create_post(post_data)
+    user_data, post_data = await asyncio.gather(
+        get_json(USERS_DATA_URL),
+        get_json(POSTS_DATA_URL),
+    )
+    await create_users(user_data)
+    await create_posts(post_data)
+
 
 def main():
     asyncio.run(async_main())

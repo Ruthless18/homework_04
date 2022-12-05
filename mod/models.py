@@ -47,7 +47,7 @@ async def create_tables():
         await connect.run_sync(Base.metadata.create_all)
 
 
-async def create_user(user_data):
+async def create_users(user_data):
     async with Session() as session:
         async with session.begin():
             for user in user_data:
@@ -57,7 +57,7 @@ async def create_user(user_data):
                 session.add(user)
 
 
-async def create_post(post_data):
+async def create_posts(post_data):
     async with Session() as session:
         async with session.begin():
             for post in post_data:
