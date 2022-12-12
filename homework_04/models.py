@@ -8,7 +8,7 @@
 создайте связи relationship между моделями: User.posts и Post.user
 """
 #import os
-import config
+import homework_04.config as config
 
 
 from sqlalchemy.ext.asyncio import (
