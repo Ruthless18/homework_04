@@ -5,8 +5,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from models import Base
-from mixins import CreatedAtMixin
+from homework_04.models import Base
+from homework_04.mixins import CreatedAtMixin
 
 
 class User(CreatedAtMixin, Base):
