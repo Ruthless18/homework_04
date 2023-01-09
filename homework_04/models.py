@@ -21,9 +21,9 @@ from sqlalchemy.orm import (
     declarative_base,
 
 )
-from homework_04.user import User
-from homework_04.post import Post
 
+#from homework_04.user import User
+#from homework_04.post import Post
 
 #PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
 
@@ -40,6 +40,8 @@ Session = sessionmaker(
     expire_on_commit = False,
 )
 
+from homework_04.user import User
+from homework_04.post import Post
 
 async def create_tables():
     async with async_engine.begin() as connect:
