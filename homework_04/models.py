@@ -7,8 +7,9 @@
 для модели Post обязательными являются user_id, title, body
 создайте связи relationship между моделями: User.posts и Post.user
 """
-import os
 from datetime import datetime
+
+
 
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
@@ -28,10 +29,10 @@ from sqlalchemy import (
     func
 )
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+PG_ASYNC_CONN_URI = "postgresql+asyncpg://postgres:password@localhost/postgres"
 
 engine = create_async_engine(
-    url = PG_CONN_URI,
+    url = PG_ASYNC_CONN_URI,
     echo = False,
 )
 
@@ -43,11 +44,10 @@ Session = sessionmaker(
     expire_on_commit = False,
 )
 
-
 async def create_tables():
-    async with engine.begin() as connect:
-        await connect.run_sync(Base.metadata.drop_all)
-        await connect.run_sync(Base.metadata.create_all)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
 
 
 async def create_users(user_data):
@@ -64,10 +64,10 @@ async def create_posts(post_data):
     async with Session() as session:
         async with session.begin():
             for post in post_data:
-                id = post['id']
                 title = post['title']
                 description = post['body']
-                post = Post(title = title, description = description, id = id)
+                user_id = post['userId']
+                post = Post(title = title, description = description, user_id = user_id)
                 session.add(post)
 
 
@@ -117,7 +117,8 @@ class Post(Base):
         Integer,
         primary_key = True,
     )
-    title = Column(String,
+    title = Column(
+        String,
         nullable='',
         default='',
         server_default='',
