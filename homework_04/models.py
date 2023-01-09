@@ -11,9 +11,8 @@ import os
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import (
-    AsyncEngine,
-    AsyncSession,
     create_async_engine,
+    AsyncSession,
 )
 from sqlalchemy.orm import (
     sessionmaker,
@@ -31,7 +30,7 @@ from sqlalchemy import (
 
 PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
 
-async_engine: AsyncEngine = create_async_engine(
+engine = create_async_engine(
     url = PG_CONN_URI,
     echo = False,
 )
@@ -39,14 +38,14 @@ async_engine: AsyncEngine = create_async_engine(
 Base = declarative_base()
 
 Session = sessionmaker(
-    async_engine,
+    engine,
     class_ = AsyncSession,
     expire_on_commit = False,
 )
 
 
 async def create_tables():
-    async with async_engine.begin() as connect:
+    async with engine.begin() as connect:
         await connect.run_sync(Base.metadata.drop_all)
         await connect.run_sync(Base.metadata.create_all)
 
@@ -78,7 +77,7 @@ class User(Base):
 
     id = Column(
         Integer,
-        primary_key = True
+        primary_key = True,
     )
     username = Column(
         String,
@@ -96,10 +95,10 @@ class User(Base):
         DateTime,
         nullable = False,
         default = datetime.utcnow,
-        server_default = func.now()
+        server_default = func.now(),
     )
 
-    posts = relationship("Post", back_populates = "users", uselist = False)
+    posts = relationship('Post', back_populates='users')
 
     def __str__(self):
         return f'{self.__class__.__name__}(id={self.id}, name={self.name!r}, email={self.email},' \
@@ -116,28 +115,26 @@ class Post(Base):
 
     id = Column(
         Integer,
-        primary_key = True
+        primary_key = True,
     )
-    title = Column(
-        String,
-        nullable = False,
-        default = '',
-        server_default = '',
+    title = Column(String,
+        nullable='',
+        default='',
+        server_default='',
     )
     description = Column(
         String,
-        nullable = False,
-        default = '',
-        server_default = '',
-
+        nullable='',
+        default='',
+        server_default='',
     )
     user_id = Column(
         Integer,
         ForeignKey('user.id'),
-        nullable=False
+        nullable = False,
     )
 
-    users = relationship("User", back_populates = "posts", uselist = False)
+    users = relationship('User', back_populates='posts')
 
 
     def __str__(self):
