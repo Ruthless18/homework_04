@@ -5,6 +5,6 @@ WORKDIR /var/data_base
 RUN pip install --upgrade pip
 RUN pip install poetry==1.2.2
 
-COPY . .
+COPY .. .
 
 RUN poetry install --only main

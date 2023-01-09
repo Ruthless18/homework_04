@@ -8,6 +8,7 @@
 создайте связи relationship между моделями: User.posts и Post.user
 """
 #import os
+
 import homework_04.config as config
 
 
@@ -21,11 +22,16 @@ from sqlalchemy.orm import (
     declarative_base,
 
 )
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+)
+from sqlalchemy.orm import relationship
+from homework_04.mixins import CreatedAtMixin
 
-#from homework_04.user import User
-#from homework_04.post import Post
 
-#PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+PG_CONN_URI = "postgresql+asyncpg://username:passwd!@localhost:5432/blog"
 
 async_engine: AsyncEngine = create_async_engine(
     url = config.DB_ASYNC_URL,
@@ -40,8 +46,6 @@ Session = sessionmaker(
     expire_on_commit = False,
 )
 
-from homework_04.user import User
-from homework_04.post import Post
 
 async def create_tables():
     async with async_engine.begin() as connect:
@@ -68,3 +72,64 @@ async def create_posts(post_data):
                 description = post['body']
                 post = Post(title = title, description = description, id = id)
                 session.add(post)
+
+
+class User(CreatedAtMixin, Base):
+    id = Column(
+        Integer,
+        primary_key = True
+    )
+    username = Column(
+        String,
+        nullable = False,
+        default = '',
+        server_default = '',
+    )
+    email = Column(
+        String,
+        nullable = False,
+        default = '',
+        server_default = '',
+    )
+
+    posts = relationship("Post", back_populates = "users", uselist = False)
+
+    def __str__(self):
+        return f"{self.__class__.__name__}(id = {self.id}, username = {self.username!r}," \
+               f"email={self.email})"
+
+
+    def __repr__(self):
+        return str(self)
+
+
+class Post(CreatedAtMixin, Base):
+    id = Column(
+        Integer,
+        primary_key = True
+    )
+    title = Column(
+        String,
+        nullable = False,
+        default = '',
+        server_default = '',
+    )
+    description = Column(
+        String,
+        nullable = False,
+        default = '',
+        server_default = '',
+    )
+
+    users = relationship("User", back_populates = "posts", uselist = False)
+
+
+    def __str__(self):
+        return f"{self.__class__.__name__}(id= {self.id}, title = {self.title!r}," \
+               f"description = {self.description!r})"
+
+
+    def __repr__(self):
+        return str(self)
+
+

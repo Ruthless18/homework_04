@@ -19,7 +19,6 @@ from homework_04.jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL,
 from homework_04.models import create_tables, create_users, create_posts
 
 
-
 async def async_main():
     await create_tables()
     user_data, post_data = await asyncio.gather(
