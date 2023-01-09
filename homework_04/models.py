@@ -8,8 +8,7 @@
 создайте связи relationship между моделями: User.posts и Post.user
 """
 import os
-
-from homework_04.mixins import CreatedAtMixin
+from datetime import datetime
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -25,6 +24,9 @@ from sqlalchemy import (
     Column,
     String,
     Integer,
+    DateTime,
+    ForeignKey,
+    func
 )
 
 PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
@@ -70,7 +72,7 @@ async def create_posts(post_data):
                 session.add(post)
 
 
-class User(CreatedAtMixin, Base):
+class User(Base):
     __tablename__ = 'user'
 
 
@@ -90,19 +92,25 @@ class User(CreatedAtMixin, Base):
         default = '',
         server_default = '',
     )
+    created_at = Column(
+        DateTime,
+        nullable = False,
+        default = datetime.utcnow,
+        server_default = func.now()
+    )
 
     posts = relationship("Post", back_populates = "users", uselist = False)
 
     def __str__(self):
-        return f"{self.__class__.__name__}(id = {self.id}, username = {self.username!r}," \
-               f"email={self.email})"
+        return f'{self.__class__.__name__}(id={self.id}, name={self.name!r}, email={self.email},' \
+               f'created_at={self.created_at!r})'
 
 
     def __repr__(self):
         return str(self)
 
 
-class Post(CreatedAtMixin, Base):
+class Post(Base):
     __tablename__ = 'posts'
 
 
@@ -121,15 +129,19 @@ class Post(CreatedAtMixin, Base):
         nullable = False,
         default = '',
         server_default = '',
+
+    )
+    user_id = Column(
+        Integer,
+        ForeignKey('user.id'),
+        nullable=False
     )
 
     users = relationship("User", back_populates = "posts", uselist = False)
 
 
     def __str__(self):
-        return f"{self.__class__.__name__}(id= {self.id}, title = {self.title!r}," \
-               f"description = {self.description!r})"
-
+        return f'{self.__class__.__name__}(id={self.id}, title={self.title!r}, description={self.description!r})'
 
     def __repr__(self):
         return str(self)
