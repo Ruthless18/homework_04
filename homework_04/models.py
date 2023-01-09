@@ -10,7 +10,7 @@
 #import os
 
 import homework_04.config as config
-
+from .mixins import CreatedAtMixin
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -20,18 +20,16 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.orm import (
     sessionmaker,
     declarative_base,
-
+    relationship,
 )
 from sqlalchemy import (
     Column,
     String,
     Integer,
 )
-from sqlalchemy.orm import relationship
-from homework_04.mixins import CreatedAtMixin
 
 
-PG_CONN_URI = "postgresql+asyncpg://username:passwd!@localhost:5432/blog"
+#PG_CONN_URI = "postgresql+asyncpg://username:passwd!@localhost:5432/blog"
 
 async_engine: AsyncEngine = create_async_engine(
     url = config.DB_ASYNC_URL,
@@ -75,6 +73,9 @@ async def create_posts(post_data):
 
 
 class User(CreatedAtMixin, Base):
+    __tablename__ = 'user'
+
+
     id = Column(
         Integer,
         primary_key = True
@@ -104,6 +105,9 @@ class User(CreatedAtMixin, Base):
 
 
 class Post(CreatedAtMixin, Base):
+    __tablename__ = 'posts'
+
+
     id = Column(
         Integer,
         primary_key = True
