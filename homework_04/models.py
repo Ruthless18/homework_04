@@ -29,7 +29,7 @@ from sqlalchemy import (
     func
 )
 
-PG_ASYNC_CONN_URI = "postgresql+asyncpg://postgres:password@localhost/postgres"
+PG_ASYNC_CONN_URI = "postgresql+asyncpg://username:passwd!@localhost:5432/blog"
 
 engine = create_async_engine(
     url = PG_ASYNC_CONN_URI,
