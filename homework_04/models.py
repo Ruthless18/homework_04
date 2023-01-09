@@ -10,7 +10,7 @@
 #import os
 
 import homework_04.config as config
-from .mixins import CreatedAtMixin
+from homework_04.mixins import CreatedAtMixin
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
