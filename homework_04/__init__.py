@@ -1,7 +1,7 @@
-import homework_04.models, homework_04.jsonplaceholder_requests
+import models, jsonplaceholder_requests
 
 
-import homework_04.main
+import main
 
 __all__ = [
     "models",

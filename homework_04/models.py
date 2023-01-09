@@ -10,8 +10,6 @@
 import os
 from datetime import datetime
 
-
-
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
     AsyncSession,
@@ -75,7 +73,6 @@ async def create_posts(p_data):
 class User(Base):
     __tablename__ = 'user'
 
-
     id = Column(
         Integer,
         primary_key = True,
@@ -99,7 +96,7 @@ class User(Base):
         server_default = func.now(),
     )
 
-    posts = relationship('Post', back_populates = 'users')
+    posts = relationship('Post', back_populates = 'users', uselist=False)
 
     def __str__(self):
         return f'{self.__class__.__name__}(id={self.id}, name={self.name!r}, email={self.email},' \
@@ -112,7 +109,6 @@ class User(Base):
 
 class Post(Base):
     __tablename__ = 'posts'
-
 
     id = Column(
         Integer,
@@ -136,7 +132,7 @@ class Post(Base):
         nullable = False,
     )
 
-    users = relationship('User', back_populates = 'posts')
+    users = relationship('User', back_populates = 'posts', uselist=False)
 
 
     def __str__(self):
