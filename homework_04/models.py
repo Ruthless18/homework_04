@@ -51,20 +51,20 @@ async def create_tables():
         await conn.run_sync(Base.metadata.create_all)
 
 
-async def create_users(user_data):
+async def create_users(u_data):
     async with Session() as session:
         async with session.begin():
-            for user in user_data:
-                username = user['username']
+            for user in u_data:
+                name = user['name']
                 email = user['email']
-                user = User(username = username, email = email)
+                user = User(name = name, email = email)
                 session.add(user)
 
 
-async def create_posts(post_data):
+async def create_posts(p_data):
     async with Session() as session:
         async with session.begin():
-            for post in post_data:
+            for post in p_data:
                 title = post['title']
                 description = post['body']
                 user_id = post['userId']
@@ -80,7 +80,7 @@ class User(Base):
         Integer,
         primary_key = True,
     )
-    username = Column(
+    name = Column(
         String,
         nullable = False,
         default = '',
@@ -99,7 +99,7 @@ class User(Base):
         server_default = func.now(),
     )
 
-    posts = relationship('Post', back_populates='users')
+    posts = relationship('Post', back_populates = 'users')
 
     def __str__(self):
         return f'{self.__class__.__name__}(id={self.id}, name={self.name!r}, email={self.email},' \
