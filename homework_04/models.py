@@ -136,7 +136,7 @@ class Post(Base):
         nullable = False,
     )
 
-    users = relationship('User', back_populates='posts')
+    users = relationship('User', back_populates = 'posts')
 
 
     def __str__(self):

@@ -14,9 +14,9 @@
 """
 import asyncio
 
-from homework_04.jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL, get_json
+from jsonplaceholder_requests import USERS_DATA_URL, POSTS_DATA_URL, get_json
 
-from homework_04.models import create_tables, create_users, create_posts
+from models import create_tables, create_users, create_posts
 
 
 async def async_main():
