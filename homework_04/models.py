@@ -7,9 +7,8 @@
 для модели Post обязательными являются user_id, title, body
 создайте связи relationship между моделями: User.posts и Post.user
 """
-#import os
+import os
 
-import homework_04.config as config
 from homework_04.mixins import CreatedAtMixin
 
 from sqlalchemy.ext.asyncio import (
@@ -28,12 +27,11 @@ from sqlalchemy import (
     Integer,
 )
 
-
-#PG_CONN_URI = "postgresql+asyncpg://username:passwd!@localhost:5432/blog"
+PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
 
 async_engine: AsyncEngine = create_async_engine(
-    url = config.DB_ASYNC_URL,
-    echo = config.DB_ECHO,
+    url = PG_CONN_URI,
+    echo = False,
 )
 
 Base = declarative_base()
@@ -135,5 +133,3 @@ class Post(CreatedAtMixin, Base):
 
     def __repr__(self):
         return str(self)
-
-
